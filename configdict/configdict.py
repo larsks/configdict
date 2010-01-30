@@ -33,7 +33,7 @@ class Section(DefaultDict):
 
         return self.parent.transform(k, v % self)
 
-class ConfigParser(DefaultDict):
+class ConfigDict(DefaultDict):
 
     def __init__ (self,
             src=None,
@@ -41,7 +41,7 @@ class ConfigParser(DefaultDict):
             k_transform=None,
             v_transforms=None):
 
-        super(ConfigParser, self).__init__(default=DDMaker({}))
+        super(ConfigDict, self).__init__(default=DDMaker({}))
 
         self.defaults = {}
         self.k_transform = lambda x: x.lower()
@@ -91,6 +91,6 @@ class ConfigParser(DefaultDict):
 
 if __name__ == '__main__':
     import pprint
-    p = ConfigParser(src = sys.argv[1])
+    p = ConfigDict(src = sys.argv[1])
     pprint.pprint(p)
 
