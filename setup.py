@@ -1,7 +1,7 @@
 from setuptools import setup
 
 setup(name='configdict',
-        version='20091216.1',
+        version='20100130.1',
         description='Parse INI files into dictionaries.',
         author='Lars Kellogg-Stedman',
         author_email='lars@oddbit.com',
