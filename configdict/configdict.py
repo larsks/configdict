@@ -1,3 +1,27 @@
+#!/usr/bin/python
+
+'''Configuration file parser.
+
+A setup file consists of sections, lead by a "[section]" header,
+and followed by "name = value" entries, with continuations allowed
+by escaping EOL with a backslash (\).
+
+For example::
+
+    options = this \
+            is \
+            a \
+            test
+
+The option values can contain format strings which refer to other values in
+the same section, or values in a special [DEFAULT] section::
+
+    [widgets]
+    size = large
+    description = %(size)s widgets
+
+'''
+
 import sys
 import re
 
@@ -16,6 +40,10 @@ def DDMaker(default):
     return _
 
 class Section(DefaultDict):
+    '''This represents a section of a configuration file.  A section 
+    receives a references to a parent configuration object, which is where
+    it will look for default values.'''
+
     def __init__ (self, name, parent):
         super(Section, self).__init__(default=DDMaker({}))
         self.name = name
@@ -34,6 +62,15 @@ class Section(DefaultDict):
         return self.parent.transform(k, v % self)
 
 class ConfigDict(DefaultDict):
+    '''A class for parsing INI style configuration files into Python
+    dictionaries.
+    
+    - src -- A file path or file-like object
+    - defaults -- a dictionary of default values
+    - k_transform -- a function for transforming option names.
+      By default, option names are converted to lower case.
+    - v_transforms -- a dictionary of functions for converting
+      option values.'''
 
     def __init__ (self,
             src=None,
@@ -79,6 +116,9 @@ class ConfigDict(DefaultDict):
                 self[cur_sec][k] = mo.group(2)
 
     def transform (self, k, v):
+        '''This is called to transform option values, based on the contents
+        of self.v_transforms.'''
+
         return self.v_transforms.get(k, lambda x: x)(v)
 
     def getdefault(self, k):

@@ -7,6 +7,8 @@ def stripped (fd):
         yield line.strip()
 
 class DefaultDict (dict):
+    '''Like
+    http://docs.python.org/library/collections.html#collections.defaultdict.'''
     def __init__(self, default=None):
         self.default = default
 
@@ -23,13 +25,25 @@ class DefaultDict (dict):
 
 
 class FileReader (object):
+    '''This class reads files line-by-line.  It strips out comments,
+    and handles backslash-escaped line continuations.'''
+
     def __init__ (self, src):
+        '''src may e either a filename or a file-like object with a 
+        ``read`` method.'''
+
         if hasattr(self, 'read'):
             self.fd = src
         else:
             self.fd = open(src)
 
     def vreadlines(self):
+        '''A generator that returns lines from a file.  Use like this::
+
+          for line in thefile.vreadlines():
+              print line
+        '''
+
         acc = []
 
         for line in stripped(self.fd):
