@@ -53,7 +53,6 @@ class FileReader (object):
             if line.endswith('\\'):
                 line = line[:-1].strip()
                 acc.append(line)
-                next
             else:
                 acc.append(line)
                 yield(' '.join(acc))
