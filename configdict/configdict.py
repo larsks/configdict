@@ -123,7 +123,7 @@ class ConfigDict(DefaultDict):
 
     def __delitem__ (self, k):
         self.k_list.remove(k)
-        super(ConfigDict, self).__delitem__(k,v)
+        super(ConfigDict, self).__delitem__(k)
 
     def parse(self, src):
         cur_sec = '__GLOBAL__'

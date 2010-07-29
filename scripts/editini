@@ -7,23 +7,31 @@ import optparse
 import configdict
 
 def parse_args():
-	p = optparse.OptionParser()
+    p = optparse.OptionParser()
 
-	p.add_option('--group', '-g', default='__GLOBAL__')
-	p.add_option('--value', '-v', action='append', default=[])
+    p.add_option('--group', '-g', default='__GLOBAL__')
+    p.add_option('--value', '-v', action='append', default=[])
+    p.add_option('--delete', '-d', action='append', default=[])
+    p.add_option('--delete-group', '-D', action='store_true')
 
-	return p.parse_args()
+    return p.parse_args()
 
 def main():
-	opts, args = parse_args()
-	cf = configdict.ConfigDict(src=sys.stdin)
+    opts, args = parse_args()
+    cf = configdict.ConfigDict(src=sys.stdin)
 
-	for v in opts.value:
-		k,v = v.split('=')
-		cf[opts.group][k] = v
+    if opts.delete_group:
+        del cf[opts.group]
 
-	print cf.tostring()
+    for v in opts.value:
+        k,v = v.split('=')
+        cf[opts.group][k] = v
+
+    for k in opts.delete:
+        del cf[opts.group][k]
+
+    print cf.tostring()
 
 if __name__ == '__main__':
-	main()
+    main()
 
