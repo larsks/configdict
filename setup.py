@@ -5,7 +5,7 @@ def read(fname):
     return open(os.path.join(os.path.dirname(__file__), fname)).read()
 
 setup(name='configdict',
-        version='20100130.1',
+        version='20100729.1',
         description='Parse INI files into dictionaries.',
         author='Lars Kellogg-Stedman',
         author_email='lars@oddbit.com',
@@ -17,5 +17,6 @@ setup(name='configdict',
             'Operating System :: OS Independent',
             ],
         long_description=read('README.rst'),
+        scripts=['scripts/editini'],
         )
 
