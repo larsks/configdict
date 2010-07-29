@@ -29,10 +29,10 @@ class FileReader (object):
     and handles backslash-escaped line continuations.'''
 
     def __init__ (self, src):
-        '''src may e either a filename or a file-like object with a 
+        '''src may either a filename or a file-like object with a
         ``read`` method.'''
 
-        if hasattr(self, 'read'):
+        if hasattr(src, 'read'):
             self.fd = src
         else:
             self.fd = open(src)

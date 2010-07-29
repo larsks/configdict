@@ -74,7 +74,7 @@ class Section(DefaultDict):
             text = [ '[%s]' % self.name ]
 
         for k,v in self.items():
-            text.append('%s = "%s"' % (k, v.replace('"', '\\"')))
+            text.append('%s = %s' % (k, v))
 
         return '\n'.join(text)
 
