@@ -1,6 +1,6 @@
 import re
 
-re_comment = re.compile('\s*#')
+re_comment = re.compile('\s*[#;]')
 
 def stripped (fd):
     for line in fd:
