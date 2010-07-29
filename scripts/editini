@@ -1,0 +1,29 @@
+#!/usr/bin/python
+
+import os
+import sys
+import optparse
+
+import configdict
+
+def parse_args():
+	p = optparse.OptionParser()
+
+	p.add_option('--group', '-g', default='__GLOBAL__')
+	p.add_option('--value', '-v', action='append', default=[])
+
+	return p.parse_args()
+
+def main():
+	opts, args = parse_args()
+	cf = configdict.ConfigDict(src=sys.stdin)
+
+	for v in opts.value:
+		k,v = v.split('=')
+		cf[opts.group][k] = v
+
+	print cf.tostring()
+
+if __name__ == '__main__':
+	main()
+
