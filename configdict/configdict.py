@@ -45,7 +45,7 @@ class Section(DefaultDict):
     it will look for default values.'''
 
     def __init__ (self, name, parent):
-        super(Section, self).__init__(default=DDMaker({}))
+        super(Section, self).__init__(default=DDMaker(None))
         self.name = name
         self.parent = parent
 
@@ -59,7 +59,12 @@ class Section(DefaultDict):
         else:
             v = self.parent.getdefault(k)
 
-        return self.parent.transform(k, v % self)
+        if v is not None:
+            v = self.parent.transform(k, v % self)
+        else:
+            v = self.parent.transform(k, v)
+
+        return v
 
     def __str__ (self):
         return '<Section "%s">' % self.name
@@ -81,6 +86,14 @@ class Section(DefaultDict):
         else:
             return ''
 
+class SectionFactory(object):
+
+    def __init__(self, cf):
+        self.cf = cf
+
+    def __call__ (self, name):
+        return Section(name, self.cf)
+
 class ConfigDict(DefaultDict):
     '''A class for parsing INI style configuration files into Python
     dictionaries.
@@ -90,20 +103,24 @@ class ConfigDict(DefaultDict):
     - k_transform -- a function for transforming option names.
       By default, option names are converted to lower case.
     - v_transforms -- a dictionary of functions for converting
-      option values.'''
+      option values.
+    - keyerror -- if True, a request for a missing key will raise
+      KeyError, otherwise it will return None.'''
 
     def __init__ (self,
             src=None,
             defaults=None,
             k_transform=None,
-            v_transforms=None):
+            v_transforms=None,
+            keyerror=False):
 
-        super(ConfigDict, self).__init__(default=DDMaker({}))
+        super(ConfigDict, self).__init__(default=SectionFactory(self))
 
         self.defaults = {}
         self.k_transform = lambda x: x.lower()
         self.v_transforms = {}
         self.k_list = []
+        self.keyerror = keyerror
 
         if defaults:
             self.defaults.update(defaults)
@@ -151,12 +168,14 @@ class ConfigDict(DefaultDict):
         return self.v_transforms.get(k, lambda x: x)(v)
 
     def getdefault(self, k):
-        if k in self['DEFAULT']:
+        if 'DEFAULT' in self and k in self['DEFAULT']:
             return self['DEFAULT'][k]
         elif k in self.defaults:
             return self.defaults[k]
-        else:
+        elif self.keyerror:
             raise KeyError(k)
+        else:
+            return None
 
     def tostring(self):
         text = []

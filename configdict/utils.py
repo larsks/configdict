@@ -17,7 +17,7 @@ class DefaultDict (dict):
             return super(DefaultDict, self).__getitem__(k)
         except KeyError:
             if callable(self.default):
-                self[k] = self.default()
+                self[k] = self.default(k)
             else:
                 self[k] = self.default
 

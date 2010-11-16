@@ -5,7 +5,7 @@ def read(fname):
     return open(os.path.join(os.path.dirname(__file__), fname)).read()
 
 setup(name='configdict',
-        version='20100729.2',
+        version='20101116.1',
         description='Parse INI files into dictionaries.',
         author='Lars Kellogg-Stedman',
         author_email='lars@oddbit.com',
